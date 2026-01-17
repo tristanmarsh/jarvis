@@ -4,6 +4,8 @@ A shell tool to enable agentic flows with remote LLM APIs while executing tools 
 
 ## Built with
 
-- Python
-- UV
+- [Python](https://www.python.org/)
+- [UV](https://docs.astral.sh/uv/)
+- [Google Gen AI](https://pypi.org/project/google-genai/)
+- [Python dotenv](https://pypi.org/project/python-dotenv/)
     
