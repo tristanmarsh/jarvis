@@ -8,4 +8,8 @@ A shell tool to enable agentic flows with remote LLM APIs while executing tools 
 - [UV](https://docs.astral.sh/uv/)
 - [Google Gen AI](https://pypi.org/project/google-genai/)
 - [Python dotenv](https://pypi.org/project/python-dotenv/)
-    
+
+## TODO
+
+- [] Config Python Formatter
+- [] Config Python Type Checker
