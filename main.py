@@ -1,23 +1,24 @@
 import os
 from dotenv import load_dotenv
 from google import genai
-import sys
 from typing import Tuple
+import argparse
+
 
 load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY")
 
 
 def main():
-    real = False
-    if len(sys.argv) > 1:
-        print(sys.argv[1])
-        if "real" in sys.argv[1]:
-            real = True
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-r", "--real", help="really call the llm model", action="store_true")
+    parser.add_argument("user_prompt", type=str, help="user prompt for the llm")
+    args = parser.parse_args()
+    print(args)
 
     print("Hello from jarvis!")
 
-    get_llm_result(real)
+    get_llm_result(args.user_prompt, args.real)
 
 
 def get_llm_client():
@@ -27,8 +28,7 @@ def get_llm_client():
     return genai.Client(api_key=api_key)
 
 
-def get_llm_result(real=False):
-    user_prompt = "2+2=?\nNumerical response only."
+def get_llm_result(user_prompt, real=False):
     if real:
         client = get_llm_client()
         result = call_model(client, user_prompt)
