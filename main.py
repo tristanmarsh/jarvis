@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 from typing import Tuple
 import argparse
 
@@ -11,10 +12,9 @@ api_key = os.environ.get("GEMINI_API_KEY")
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-r", "--real", help="really call the llm model", action="store_true")
     parser.add_argument("user_prompt", type=str, help="user prompt for the llm")
+    parser.add_argument("-r", "--real", help="really call the llm model", action="store_true")
     args = parser.parse_args()
-    print(args)
 
     print("Hello from jarvis!")
 
@@ -43,9 +43,10 @@ def mock_call_model(user_prompt: str) -> Tuple[int, int, str]:
 
 
 def call_model(client, user_prompt: str) -> Tuple[int, int, str]:
+    messages = types.Content(role="user", parts=[types.Part(text=user_prompt)])
     try:
         result = client.models.generate_content(
-            model="gemini-2.5-flash", contents=user_prompt
+            model="gemini-2.5-flash", contents=messages
         )
 
         if result is None or result.usage_metadata is None:
