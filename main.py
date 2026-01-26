@@ -4,21 +4,24 @@ from google import genai
 from google.genai import types
 from typing import Tuple
 import argparse
-
+from logger import Logger
 
 load_dotenv()
 api_key = os.environ.get("GEMINI_API_KEY")
 
+parser = argparse.ArgumentParser()
+parser.add_argument("user_prompt", type=str, help="user prompt for the llm")
+parser.add_argument("-r", "--real", help="really call the llm model", action="store_true")
+parser.add_argument("-v", "--verbose", help="print verbose output logs", action="store_true")
+args = parser.parse_args()
+logger = Logger(args.verbose)
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("user_prompt", type=str, help="user prompt for the llm")
-    parser.add_argument("-r", "--real", help="really call the llm model", action="store_true")
-    args = parser.parse_args()
-
     print("Hello from jarvis!")
 
-    get_llm_result(args.user_prompt, args.real)
+    result = get_llm_result(args.user_prompt, args.real)
+
+    print_llm_result(args.user_prompt, *result, args.verbose)
 
 
 def get_llm_client():
@@ -34,11 +37,10 @@ def get_llm_result(user_prompt, real=False):
         result = call_model(client, user_prompt)
     else:
         result = mock_call_model(user_prompt)
-    print_llm_result(user_prompt, *result)
-
+    return result
 
 def mock_call_model(user_prompt: str) -> Tuple[int, int, str]:
-    print("Log: mock_call_model")
+    logger.log("mock_call_model")
     return (10, 1, f"{user_prompt}? Wow! That's crazy!")
 
 
@@ -70,14 +72,20 @@ def print_llm_result(
     prompt_tokens: int,
     response_tokens: int,
     response: str,
+    verbose=False,
 ):
-    template = f"""User prompt: {user_prompt}
+    template = f"Response:\n{response}"
+
+    verbose_template = f"""User prompt: {user_prompt}
 Prompt tokens: {prompt_tokens}
 Response tokens: {response_tokens}
 Response:
 {response}
 """
-    print(template)
+    if verbose:
+        print(verbose_template)
+    else:
+        print(template)
 
 
 if __name__ == "__main__":
